@@ -15,7 +15,13 @@ export const Register = async (req, res) => {
 
     const hashedpasword = await bcrypt.hash(password, 10);
     user = await User.create({ name, email, password: hashedpasword, pic });
-    sendCookies(req, res, user, "Registered Succesfully", 201);
+    res.status(201).json({
+      _id: user._id,
+      name,
+      email,
+      pic,
+      token: sendCookies(user._id),
+    });
   } catch (error) {
     errorHandler(error, res);
   }
@@ -40,32 +46,28 @@ export const Login = async (req, res) => {
     }
 
     user = await User.findById(user._id);
-    sendCookies(req, res, user, `Welcome Back ${user.name}`, 200);
+
+    res.status(200).json({
+      user,
+      token: sendCookies(user._id),
+    });
   } catch (error) {
     errorHandler(error, res);
   }
 };
 
-export const Logout = async (req, res) => {
-  try {
-    res
-      .cookie("cookies", "", {
-        httpOnly: true,
-        expires: new Date(Date.now()),
-        secure: process.env.NODE_ENV === "Development" ? false : true,
-      })
-      .json({ success: true, message: "Logged Out Successfully" });
-  } catch (error) {
-    errorHandler(error, res);
-  }
-};
+export const Allusers = async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: new RegExp(req.query.search, "i") } },
+          { email: { $regex: new RegExp(req.query.search, "i") } },
+        ],
+      }
+    : {};
 
-export const GetMyProfile = async (req, res) => {
-  try {
-    const user = req.user;
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+  res.send(users);
 
-    res.json({ success: true, message: `Hey ${user.name}`, user });
-  } catch (error) {
-    errorHandler(error, res);
-  }
+  console.log(keyword);
 };

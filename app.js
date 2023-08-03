@@ -5,7 +5,7 @@ export const app = express();
 import { config } from "dotenv";
 import { Server } from "socket.io";
 import userRouter from "./routes/Users.js";
-import BodyParser from "body-parser";
+import chatsRouter from "./routes/ChatsRoute.js";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { notFound } from "./middlewares/notFound.js";
@@ -15,15 +15,9 @@ config({
 
 const server = http.createServer(app);
 
-app.use(
-  cors({
-    origin: [process.env.FRONTEND_URL],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser());
 app.use(cookieParser());
 
 const io = new Server();
@@ -32,6 +26,7 @@ io.on("connection", () => {
 });
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/chat", chatsRouter);
 
 app.get("/", (req, res) => {
   res.send("Chal Gya  BC");

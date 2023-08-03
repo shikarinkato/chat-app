@@ -1,4 +1,4 @@
-export const errorHandler = (error, res, next) => {
+export const errorHandler = (error, res) => {
   console.log(error.message);
   res
     .status(500)
