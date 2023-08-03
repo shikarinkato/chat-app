@@ -57,6 +57,7 @@ export const Login = async (req, res) => {
 };
 
 export const Allusers = async (req, res) => {
+  console.log(req.user);
   const keyword = req.query.search
     ? {
         $or: [
@@ -66,7 +67,7 @@ export const Allusers = async (req, res) => {
       }
     : {};
 
-  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+  const users = await User.find(keyword).find({ _id: { $ne: req.user.id } });
   res.send(users);
 
   console.log(keyword);

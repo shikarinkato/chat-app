@@ -1,18 +1,27 @@
 import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
+import { errorHandler } from "./errorhandler.js";
 
 export const IsAuthenticated = async (req, res, next) => {
-  console.log(req.user);
-  res.send("hii");
-  // const { cookies } = req.user;
-  // if (!cookies) {
-  //   return res
-  //     .status(401)
-  //     .json({ success: false, message: "Log in or Register First" });
-  // }
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
 
-  // const decoded = jwt.verify(cookies, process.env.JWT_SECRET);
-  // const user = await User.findById(decoded.id);
-  // req.user = user;
-  // next();
+      // decoded id
+      const decodedid = jwt.verify(token, process.env.JWT_SECRET);
+
+      req.user = await User.findById(decodedid.id).select("-password");
+      next();
+    } catch (error) {
+      console.log(error.message);
+      errorHandler(error, res);
+    }
+  }
+  if (!token) {
+    res.status(401).json({ message: "Token Did Not Exists" });
+  }
 };
