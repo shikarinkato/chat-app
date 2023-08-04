@@ -57,7 +57,6 @@ export const Login = async (req, res) => {
 };
 
 export const Allusers = async (req, res) => {
-  console.log(req.user);
   const keyword = req.query.search
     ? {
         $or: [
@@ -69,6 +68,10 @@ export const Allusers = async (req, res) => {
 
   const users = await User.find(keyword).find({ _id: { $ne: req.user.id } });
   res.send(users);
+  
+  if (!users) {
+    return res.status(400).json({ message: "User Not Found" });
+  }
 
   console.log(keyword);
 };
