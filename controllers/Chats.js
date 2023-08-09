@@ -61,35 +61,32 @@ export const fetchChats = async (req, res) => {
       select: "name pic email",
     });
 
-    res.status(200).send({ data: results });
+    res.status(200).json(results);
   } catch (error) {
     errorHandler(error, res);
   }
 };
 
 export const creategroupChat = async (req, res) => {
+  if (!req.body.users || !req.body.name) {
+    errorHandler(res, 400, "Please Fill All The Fields");
+    return;
+  }
+
+  let users = JSON.parse(req.body.users);
+
+  console.log(users);
+  if (users.length < 2) {
+    ErrorHandler2(
+      res,
+      400,
+      "More Than 2 Members are Required To Form a Group Chat"
+    );
+    return;
+  }
+
+  users.push(req.user);
   try {
-    if (!req.body.users || !req.body.name) {
-      errorHandler(res, 400, "Please Fill All The Fields");
-      return;
-    }
-
-    // let users = req.body.users;
-    // console.log(req.body.users);ss
-
-    let users = await JSON.parse(req.body.users);
-
-    console.log(users);
-    if (users.length < 2) {
-      ErrorHandler2(
-        res,
-        400,
-        "More Than 2 Members are Required To Form a Group Chat"
-      );
-      return;
-    }
-
-    users.push(req.user);
     const groupChat = await Chat.create({
       chatName: req.body.name,
       users,
