@@ -39,7 +39,7 @@ export const accessChats = async (req, res) => {
         "-password"
       );
 
-      res.status(201).json({ data: Fullchat });
+      res.status(201).json( Fullchat );
     } catch (error) {
       errorHandler(error, res);
     }
