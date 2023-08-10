@@ -19,6 +19,7 @@ const UserModel = new Schema(
     },
     pic: {
       type: String,
+      required: true,
       default: "https://cdn150.picsart.com/upscale-245339439045212.png",
     },
   },

@@ -39,7 +39,7 @@ export const accessChats = async (req, res) => {
         "-password"
       );
 
-      res.status(201).json( Fullchat );
+      res.status(201).json(Fullchat);
     } catch (error) {
       errorHandler(error, res);
     }
@@ -60,6 +60,7 @@ export const fetchChats = async (req, res) => {
       path: "latestMessage.sender",
       select: "name pic email",
     });
+    console.log(results);
 
     res.status(200).json(results);
   } catch (error) {
