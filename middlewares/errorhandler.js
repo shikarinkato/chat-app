@@ -1,5 +1,4 @@
 export const errorHandler = (error, res) => {
-  console.log(error.message);
   return res
     .status(500)
     .json({ success: false, message: "Some Internal Server Occured" });

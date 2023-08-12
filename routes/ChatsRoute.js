@@ -14,7 +14,7 @@ router
   .route("/:id")
   .get(IsAuthenticated, fetchChats)
   .post(IsAuthenticated, accessChats);
-router.post("/group", IsAuthenticated, creategroupChat);
+router.post("/groupcreate", IsAuthenticated, creategroupChat);
 router.put("/grouprename", IsAuthenticated, renameGroupChat);
 router.put("/addtogroup", IsAuthenticated, addTogroup);
 router.put("/removed", IsAuthenticated, removefromGroup);

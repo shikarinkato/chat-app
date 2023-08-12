@@ -47,6 +47,7 @@ export const accessChats = async (req, res) => {
 };
 
 export const fetchChats = async (req, res) => {
+  // console.log(req.user)
   try {
     const chats = await Chat.find({
       users: { $elemMatch: { $eq: req.user._id } },
@@ -60,7 +61,6 @@ export const fetchChats = async (req, res) => {
       path: "latestMessage.sender",
       select: "name pic email",
     });
-    console.log(results);
 
     res.status(200).json(results);
   } catch (error) {
@@ -68,42 +68,9 @@ export const fetchChats = async (req, res) => {
   }
 };
 
-export const creategroupChat = async (req, res) => {
-  if (!req.body.users || !req.body.name) {
-    errorHandler(res, 400, "Please Fill All The Fields");
-    return;
-  }
-
-  let users = JSON.parse(req.body.users);
-
-  console.log(users);
-  if (users.length < 2) {
-    ErrorHandler2(
-      res,
-      400,
-      "More Than 2 Members are Required To Form a Group Chat"
-    );
-    return;
-  }
-
-  users.push(req.user);
-  try {
-    const groupChat = await Chat.create({
-      chatName: req.body.name,
-      users,
-      isGroupChat: true,
-      GroupAdmin: req.user,
-    });
-    const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
-      .populate("users", "-password")
-      .populate("GroupAdmin", "-password");
-
-    res.status(201).json(fullGroupChat);
-  } catch (error) {
-    errorHandler(error, res);
-  }
+export const creategroupChat = async () => {
+  res.send(req.user);
 };
-
 export const renameGroupChat = async (req, res) => {
   const { chatId, chatName } = req.body;
 

@@ -73,5 +73,4 @@ export const Allusers = async (req, res) => {
     return res.status(400).json({ message: "User Not Found" });
   }
 
-  console.log(keyword);
 };
