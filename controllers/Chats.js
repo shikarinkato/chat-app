@@ -31,7 +31,7 @@ export const accessChats = async (req, res) => {
       isGroupChat: false,
       users: [req.user._id, userid],
     };
-
+    console.log(req.user);
     try {
       const createdChat = await Chat.create(chatdata);
       const Fullchat = await Chat.findOne({ _id: createdChat._id }).populate(
@@ -47,7 +47,7 @@ export const accessChats = async (req, res) => {
 };
 
 export const fetchChats = async (req, res) => {
-  // console.log(req.user)
+  console.log(req.user)
   try {
     const chats = await Chat.find({
       users: { $elemMatch: { $eq: req.user._id } },

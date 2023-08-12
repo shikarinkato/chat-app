@@ -2,6 +2,7 @@ import User from "../models/UserModel.js";
 import bcrypt from "bcryptjs";
 import { sendCookies } from "../middlewares/Cookies.js";
 import { ErrorHandler2, errorHandler } from "../middlewares/errorhandler.js";
+import { query } from "express";
 
 export const Register = async (req, res) => {
   const { name, email, password, pic } = req.body;
@@ -57,7 +58,8 @@ export const Login = async (req, res) => {
 };
 
 export const Allusers = async (req, res) => {
-  const keyword = req.query.search
+  const keyword = req.query.search;
+  const query = keyword
     ? {
         $or: [
           { name: { $regex: new RegExp(req.query.search, "i") } },
@@ -65,12 +67,15 @@ export const Allusers = async (req, res) => {
         ],
       }
     : {};
+  try {
+    const users = await User.find({ ...query, _id: { $ne: req.user.id } });
+    res.send(users);
 
-  const users = await User.find(keyword).find({ _id: { $ne: req.user.id } });
-  res.send(users);
-  
-  if (!users) {
-    return res.status(400).json({ message: "User Not Found" });
+    console.log(users);
+    if (!users) {
+      return res.status(400).json({ message: "User Not Found" });
+    }
+  } catch (error) {
+    errorHandler(error, res);
   }
-
 };
