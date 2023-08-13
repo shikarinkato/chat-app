@@ -71,6 +71,8 @@ export const fetchChats = async (req, res) => {
 export const creategroupChat = async () => {
   res.send(req.user);
 };
+
+
 export const renameGroupChat = async (req, res) => {
   const { chatId, chatName } = req.body;
 

@@ -6,6 +6,7 @@ import { config } from "dotenv";
 import { Server } from "socket.io";
 import userRouter from "./routes/Users.js";
 import chatsRouter from "./routes/ChatsRoute.js";
+import messageRouter from "./routes/Messsages.js";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { notFound } from "./middlewares/notFound.js";
@@ -32,6 +33,7 @@ io.on("connection", () => {
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/chat", chatsRouter);
+app.use("/api/v1/message", messageRouter);
 
 app.get("/", (req, res) => {
   res.send("Chal Gya  BC");
