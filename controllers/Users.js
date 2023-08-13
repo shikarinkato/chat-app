@@ -49,7 +49,10 @@ export const Login = async (req, res) => {
     user = await User.findById(user._id);
 
     res.status(200).json({
-      user,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      pic: user.pic,
       token: sendCookies(user._id),
     });
   } catch (error) {
