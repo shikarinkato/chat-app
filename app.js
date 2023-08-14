@@ -26,7 +26,12 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const io = new Server();
+const io = new Server(server, {
+  pingTimeout: 60000,
+  cors: { origin: process.env.FRONTEND_URL },
+});
+
+
 io.on("connection", () => {
   console.log("New Connection");
 });
