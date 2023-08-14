@@ -74,7 +74,6 @@ export const Allusers = async (req, res) => {
     const users = await User.find({ ...query, _id: { $ne: req.user.id } });
     res.send(users);
 
-    console.log(users);
     if (!users) {
       return res.status(400).json({ message: "User Not Found" });
     }
