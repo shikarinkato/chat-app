@@ -22,7 +22,7 @@ export const sendMessage = async (req, res) => {
     message = await message.populate("chat");
     message = await User.populate(message, {
       path: "chat.users",
-      select: "name email pic",
+      select: "name email pic ",
     });
 
     await Chat.findByIdAndUpdate(req.body.chatId, {
@@ -36,17 +36,19 @@ export const sendMessage = async (req, res) => {
 };
 
 export const Allmessages = async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.chatID;
   try {
     const messages = await Message.find({ chat: id })
       .populate("sender", "name pic")
       .populate("chat");
-    if (!messages) {
+
+    if (!messages || messages.length === 0) {
       ErrorHandler2(
         res,
         400,
-        "Messages Not Available Either Check The Id is Correct Or NOt"
+        "Messages are not Available. Check The Id it is Correct Or NOt"
       );
+      return;
     }
 
     res.status(200).json(messages);
