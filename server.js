@@ -32,19 +32,19 @@ io.on("connection", (socket) => {
   socket.on("typing", (room) => {
     socket.in(room).emit("typing");
   });
+
   socket.on("stoptyping", (room) => {
     socket.in(room).emit("stoptyping");
   });
 
   socket.on("new message", (newMessageReceived) => {
-    let chat = newMessageReceived.chat;
+    let chat = newMessageReceived;
 
     if (!chat.users) return console.log("chat.users is not defined");
 
     chat.users.forEach((user) => {
       if (user._id == newMessageReceived.sender._id) return;
-
-      socket.in(user).emit("message received" + newMessageReceived);
+      else socket.in(user).emit("message received" + newMessageReceived);
     });
   });
 
